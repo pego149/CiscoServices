@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CiscoIPPhoneMenu>
+    <Title>{{ contact.name }}</Title>
+    <Prompt>Zvolte moznost</Prompt>
+    <MenuItem>
+        <Name>Cele meno a priezvisko</Name>
+        <URL>http://158.193.86.52/message/{{ contact.name }}</URL>
+    </MenuItem>
+    <MenuItem>
+        <Name>Pracovisko</Name>
+        <URL>http://158.193.86.52/message/{{ contact.job }}</URL>
+    </MenuItem>
+    <MenuItem>
+        <Name>Miestnost</Name>
+        <URL>http://158.193.86.52/message/{{ contact.room }}</URL>
+    </MenuItem>
+    <MenuItem>
+        <Name>Telefon</Name>
+        <URL>http://158.193.86.52/contact_dialer/{{ contact.tel }}</URL>
+    </MenuItem>
+    <MenuItem>
+        <Name>Mobil</Name>
+        <URL>http://158.193.86.52/contact_dialer/{{ contact.mobil }}</URL>
+    </MenuItem>
+    <MenuItem>
+        <Name>E-mail</Name>
+        <URL>http://158.193.86.52/message/{{ contact.mail }}</URL>
+    </MenuItem>
+    <MenuItem>
+        <Name>Funkcia</Name>
+        <URL>http://158.193.86.52/message/{{ contact.function }}</URL>
+    </MenuItem>
+</CiscoIPPhoneMenu>

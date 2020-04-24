@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <CiscoIPPhoneMenu>
-    <Title>IP Phone Services</Title>
-    <Prompt>Choose a service</Prompt>
+    <Title>Django sluzby telefonu Cisco</Title>
+    <Prompt>Vyberte sluzbu</Prompt>
     {% for service in services %}
-        <MenuItem>
-            <Name>{{ service.name }}</Name>
-            <URL>
-                {{ service.url }}
-            </URL>
-        </MenuItem>
+    <MenuItem>
+        <Name>{{ service.name }}</Name>
+        <URL>http://158.193.86.52/{{ service.name.lower }}/</URL>
+    </MenuItem>
     {% endfor %}
 </CiscoIPPhoneMenu>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CiscoIPPhoneMenu>
+    <Prompt>Zvolte spravu</Prompt>
+    {% for item in entries %}
+        <MenuItem>
+            <Name>{{ item.title }}</Name>
+            <URL>http://158.193.86.52/message/{{ item.description }}</URL>
+        </MenuItem>
+    {% endfor %}
+</CiscoIPPhoneMenu>

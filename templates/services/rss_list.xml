@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CiscoIPPhoneMenu>
+    <Title>RSS spravy</Title>
+    <Prompt>Zvolte poskytovatela</Prompt>
+    {% for rss in rsses %}
+        <MenuItem>
+            <Name>{{ rss.name }}</Name>
+            <URL>http://158.193.86.52/rss/{{ rss.name.lower }}</URL>
+        </MenuItem>
+    {% endfor %}
+</CiscoIPPhoneMenu>

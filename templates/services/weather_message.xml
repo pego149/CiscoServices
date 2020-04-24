@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CiscoIPPhoneText>
+    <Title>Pocasie v: {{ city }}</Title>
+    <Text>teplota: {{ w.main.temp }}C, pocitova: {{ w.main.feels_like }}C
+pocasie: {{ weather }}
+rychlost vetra: {{ w.wind.speed }}m/s
+oblacnost: {{ w.clouds.all }}%, tlak: {{ w.main.pressure }}hPa
+vlhkost: {{ w.main.humidity }}%</Text>
+</CiscoIPPhoneText>

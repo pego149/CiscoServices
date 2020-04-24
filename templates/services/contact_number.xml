@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CiscoIPPhoneDirectory>
+<Title>Kontakty UNIZA</Title>
+<Prompt>Zvolte cislo</Prompt>
+    {% for number in numbers %}
+    <DirectoryEntry>
+        <Name> </Name>
+        <Telephone>{{ number }}</Telephone>
+    </DirectoryEntry>
+    {% endfor %}
+</CiscoIPPhoneDirectory>

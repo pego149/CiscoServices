@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CiscoIPPhoneDirectory>
+<Title>Kontakty ZLATE STRANKY</Title>
+<Prompt>Poskytovatel zlatestranky.sk</Prompt>
+<DirectoryEntry>
+    <Name>{{ contact.name }}</Name>
+    <Telephone>{{ contact.tel }}</Telephone>
+</DirectoryEntry>
+</CiscoIPPhoneDirectory>

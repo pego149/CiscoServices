@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CiscoIPPhoneMenu>
+    <Title>Kontakty UNIZA</Title>
+    <Prompt>Zvolte kontakt</Prompt>
+    {% for contact in contacts %}
+        <MenuItem>
+            <Name>{{ contact.name }}</Name>
+            <URL>http://158.193.86.52/contact/?name={{ contact.name }}&amp;oc={{ contact.url }}</URL>
+        </MenuItem>
+    {% endfor %}
+</CiscoIPPhoneMenu>

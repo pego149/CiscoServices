@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CiscoIPPhoneInput>
+    <Title>Zadajte Meno a Priezvisko kontaktu:</Title>
+    <Prompt/>
+    <URL>http://158.193.86.52/contacts_engine/</URL>
+    <InputItem>
+    <DisplayName>Hladat</DisplayName>
+    <QueryStringParam>meno</QueryStringParam>
+    </InputItem>
+</CiscoIPPhoneInput>
