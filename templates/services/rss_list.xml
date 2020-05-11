@@ -5,7 +5,7 @@
     {% for rss in rsses %}
         <MenuItem>
             <Name>{{ rss.name }}</Name>
-            <URL>http://{{ request.get_host }}/CiscoServices/rss/{{ rss.name.lower }}</URL>
+            <URL>http://{{ request.get_host }}/CiscoServices/rss/{{ rss.url2 }}</URL>
         </MenuItem>
     {% endfor %}
 </CiscoIPPhoneMenu>

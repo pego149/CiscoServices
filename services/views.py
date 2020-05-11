@@ -97,12 +97,18 @@ def UTFToASCII(text):
 
 def services_list(request):
     items = MenuItem.objects.all()
-    return render(request, 'services/services_list.xml', {'services': items}, content_type="application/xml")
+    services = []
+    for service in items:
+        services.append({'name': service.name, 'url': service.name.lower().replace(" ","_")})
+    return render(request, 'services/services_list.xml', {'services': services}, content_type="application/xml")
 
 
 def rss_list(request):
     items = RSSItem.objects.all()
-    return render(request, 'services/rss_list.xml', {'rsses': items}, content_type="application/xml")
+    rsses = []
+    for rss in items:
+        rsses.append({'name': rss.name, 'url': rss.url, 'url2': rss.name.lower().replace(" ","%20")})
+    return render(request, 'services/rss_list.xml', {'rsses': rsses}, content_type="application/xml")
 
 
 def rss_item(request, service):
@@ -112,7 +118,7 @@ def rss_item(request, service):
     feed = feedparser.parse(srv.url)
     for entry in feed.entries:
         itms.append({'title': UTFToASCII(remove_tags(html.unescape(entry.title)).strip()),
-                     'description': UTFToASCII(remove_tags(html.unescape(entry.summary)).strip())})
+                     'description': UTFToASCII(remove_tags(html.unescape(entry.summary)).strip().replace(" ","%20"))})
     return render(request, 'services/rss_service.xml', {'rss': srv, 'entries': itms[:20]}, content_type="application/xml")
 
 
@@ -171,19 +177,19 @@ def contact(request):
     for directory in jsonList:
         cardData = {}
         cardData['oc'] = directory['oc']
-        cardData['name'] = UTFToASCII(directory['name'])
+        cardData['name'] = UTFToASCII(directory['name']).replace(" ","%20")
         if UTFToASCII(directory['function']) == "":
             cardData['function'] = "zamestnanec"
         else:
-            cardData['function'] = UTFToASCII(directory['function'])
-        cardData['tel'] = directory['tel']
-        cardData['mobil'] = directory['mobil']
-        cardData['mail'] = directory['mail']
-        cardData['job'] = UTFToASCII(directory['job'])
-        cardData['room'] = UTFToASCII(directory['room'])
+            cardData['function'] = UTFToASCII(directory['function']).replace(" ","%20")
+        cardData['tel'] = directory['tel'].replace(" ","%20")
+        cardData['mobil'] = directory['mobil'].replace(" ","%20")
+        cardData['mail'] = directory['mail'].replace(" ","%20")
+        cardData['job'] = UTFToASCII(directory['job']).replace(" ","%20")
+        cardData['room'] = UTFToASCII(directory['room']).replace(" ","%20")
         parsedData.append(cardData)
     for c in parsedData:
-        if c.get('oc') == oc and c.get('name') == meno:
+        if c.get('oc') == oc and c.get('name') == meno.replace(" ","%20"):
             return render(request, 'services/contact.xml', {'contact': c}, content_type="application/xml")
 
 

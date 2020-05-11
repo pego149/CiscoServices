@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <CiscoIPPhoneMenu>
-    <Title>{{ contact.name }}</Title>
     <Prompt>Zvolte moznost</Prompt>
     <MenuItem>
         <Name>Cele meno a priezvisko</Name>

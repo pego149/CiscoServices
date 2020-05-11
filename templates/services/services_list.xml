@@ -5,7 +5,7 @@
     {% for service in services %}
     <MenuItem>
         <Name>{{ service.name }}</Name>
-        <URL>http://{{ request.get_host }}/CiscoServices/{{ service.name.lower }}/</URL>
+        <URL>http://{{ request.get_host }}/CiscoServices/{{ service.url }}/</URL>
     </MenuItem>
     {% endfor %}
 </CiscoIPPhoneMenu>
