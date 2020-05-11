@@ -2,7 +2,7 @@
 <CiscoIPPhoneInput>
     <Title>Zadajte ECV mesta</Title>
     <Prompt/>
-    <URL>http://158.193.86.52/weather_engine/</URL>
+    <URL>http://{{ request.get_host }}/CiscoServices/weather_engine/</URL>
     <InputItem>
     <DisplayName>ECV</DisplayName>
     <QueryStringParam>mesto</QueryStringParam>

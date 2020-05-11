@@ -4,7 +4,7 @@
     {% for item in entries %}
         <MenuItem>
             <Name>{{ item.title }}</Name>
-            <URL>http://158.193.86.52/message/{{ item.description }}</URL>
+            <URL>http://{{ request.get_host }}/CiscoServices/message/{{ item.description }}</URL>
         </MenuItem>
     {% endfor %}
 </CiscoIPPhoneMenu>
