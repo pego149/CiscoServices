@@ -2,31 +2,11 @@
 <CiscoIPPhoneMenu>
     <Prompt>Zvolte moznost</Prompt>
     <MenuItem>
-        <Name>Cele meno a priezvisko</Name>
-        <URL>http://{{ request.get_host }}/CiscoServices/message/{{ contact.name }}</URL>
-    </MenuItem>
-    <MenuItem>
-        <Name>Pracovisko</Name>
-        <URL>http://{{ request.get_host }}/CiscoServices/message/{{ contact.job }}</URL>
-    </MenuItem>
-    <MenuItem>
-        <Name>Miestnost</Name>
-        <URL>http://{{ request.get_host }}/CiscoServices/message/{{ contact.room }}</URL>
-    </MenuItem>
-    <MenuItem>
         <Name>Telefon</Name>
         <URL>http://{{ request.get_host }}/CiscoServices/contact_dialer/{{ contact.tel }}</URL>
     </MenuItem>
     <MenuItem>
         <Name>Mobil</Name>
         <URL>http://{{ request.get_host }}/CiscoServices/contact_dialer/{{ contact.mobil }}</URL>
-    </MenuItem>
-    <MenuItem>
-        <Name>E-mail</Name>
-        <URL>http://{{ request.get_host }}/CiscoServices/message/{{ contact.mail }}</URL>
-    </MenuItem>
-    <MenuItem>
-        <Name>Funkcia</Name>
-        <URL>http://{{ request.get_host }}/CiscoServices/message/{{ contact.function }}</URL>
     </MenuItem>
 </CiscoIPPhoneMenu>
