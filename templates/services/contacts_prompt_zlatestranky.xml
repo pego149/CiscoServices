@@ -4,7 +4,8 @@
     <Prompt/>
     <URL>http://{{ request.get_host }}/CiscoServices/contacts_engine_zlatestranky/</URL>
     <InputItem>
-    <DisplayName>Hladat</DisplayName>
-    <QueryStringParam>meno</QueryStringParam>
+        <DisplayName>Hladat</DisplayName>
+        <QueryStringParam>meno</QueryStringParam>
+        <InputFlags>A</InputFlags>
     </InputItem>
 </CiscoIPPhoneInput>

@@ -6,5 +6,6 @@
     <InputItem>
     <DisplayName>Hladat</DisplayName>
     <QueryStringParam>meno</QueryStringParam>
+    <InputFlags>A</InputFlags>
     </InputItem>
 </CiscoIPPhoneInput>

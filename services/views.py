@@ -117,8 +117,8 @@ def services_list(request):
     items = MenuItem.objects.all()
     services = []
     for service in items:
-        services.append({'name': service.name, 'url': service.name.lower().replace(" ","_")})
-    return render(request, 'services/services_list.xml', {'services': services}, content_type="application/xml")
+        services.append({'name': service.name, 'url': service.name.lower().replace(" ", "_")})
+    return render(request, 'services/services_list.xml', {'services': services})
 
 
 def rss_list(request):
@@ -132,8 +132,8 @@ def rss_list(request):
     items = RSSItem.objects.all()
     rsses = []
     for rss in items:
-        rsses.append({'name': rss.name, 'url': rss.url, 'url2': rss.name.lower().replace(" ","%20")})
-    return render(request, 'services/rss_list.xml', {'rsses': rsses}, content_type="application/xml")
+        rsses.append({'name': rss.name, 'url': rss.url, 'url2': rss.name.lower().replace(" ", "%20")})
+    return render(request, 'services/rss_list.xml', {'rsses': rsses})
 
 
 def rss_item(request, service):
@@ -153,9 +153,9 @@ def rss_item(request, service):
     itms = []
     feed = feedparser.parse(srv.url)
     for entry in feed.entries:
-        itms.append({'title': UTFToASCII(remove_tags(html.unescape(entry.title)).strip()),
-                     'description': UTFToASCII(remove_tags(html.unescape(entry.summary)).strip().replace(" ","%20"))})
-    return render(request, 'services/rss_service.xml', {'rss': srv, 'entries': itms[:20]}, content_type="application/xml")
+        itms.append({'title': UTFToASCII(remove_tags(html.unescape(entry.title)).strip()[:63]),
+                     'description': UTFToASCII(remove_tags(html.unescape(entry.summary)).strip().replace(" ", "%20"))[:230]})
+    return render(request, 'services/rss_service.xml', {'rss': srv, 'entries': itms[:20]})
 
 
 def message(request, msg):
@@ -165,7 +165,7 @@ def message(request, msg):
     :param msg: správa ktorá sa má zobraziť
     :return: webová odpoveď
     """
-    return render(request, 'services/message.xml', {'text': msg}, content_type="application/xml")
+    return render(request, 'services/message.xml', {'text': msg})
 
 
 def message_empty(request):
@@ -174,7 +174,7 @@ def message_empty(request):
     :param request: webová požiadavka
     :return: webová odpoveď
     """
-    return render(request, 'services/message.xml', {'text': "Ziadne data"}, content_type="application/xml")
+    return render(request, 'services/message.xml', {'text': "Ziadne data"})
 
 
 def weather_prompt(request):
@@ -184,7 +184,7 @@ def weather_prompt(request):
     :param request: webová požiadavka
     :return: webová odpoveď
     """
-    return render(request, 'services/weather_prompt.xml', {}, content_type="application/xml")
+    return render(request, 'services/weather_prompt.xml', {})
 
 
 def weather(request):
@@ -208,7 +208,7 @@ def weather(request):
         jsonData = json.loads(res.content.decode())
         return render(request, 'services/weather_message.xml', {'w': jsonData, 'weather': UTFToASCII(jsonData['weather'][0]['description']), 'city': UTFToASCII(jsonData['name'])}, content_type="application/xml")
     except:
-        return render(request, 'services/message.xml', {'text': "Mesto nenajdene"}, content_type="application/xml")
+        return render(request, 'services/message.xml', {'text': "Mesto nenajdene"})
 
 
 def contacts_prompt(request):
@@ -218,7 +218,7 @@ def contacts_prompt(request):
     :param request: webová požiadavka
     :return: webová odpoveď
     """
-    return render(request, 'services/contacts_prompt.xml', {}, content_type="application/xml")
+    return render(request, 'services/contacts_prompt.xml', {})
 
 
 def contacts_engine(request):
@@ -244,7 +244,7 @@ def contacts_engine(request):
         cardData['url'] = directory['oc']
         cardData['name'] = UTFToASCII(directory['name'])
         parsedData.append(cardData)
-    return render(request, 'services/contacts_list.xml', {'contacts': parsedData[:20]}, content_type="application/xml")
+    return render(request, 'services/contacts_list.xml', {'contacts': parsedData[:20]})
 
 
 def contact(request):
@@ -281,7 +281,7 @@ def contact(request):
         parsedData.append(cardData)
     for c in parsedData:
         if c.get('oc') == oc and c.get('name') == meno.replace(" ","%20"):
-            return render(request, 'services/contact.xml', {'contact': c}, content_type="application/xml")
+            return render(request, 'services/contact.xml', {'contact': c})
 
 
 def contact_dialer(request, numbers):
@@ -295,7 +295,7 @@ def contact_dialer(request, numbers):
     :return: webová odpoveď
     """
     out = numbers.split(',')
-    return render(request, 'services/contact_number.xml', {'numbers': out}, content_type="application/xml")
+    return render(request, 'services/contact_number.xml', {'numbers': out})
 
 
 def contact_dialer_empty(request):
@@ -306,7 +306,7 @@ def contact_dialer_empty(request):
     :param request: webová požiadavka
     :return: webová odpoveď
     """
-    return render(request, 'services/message.xml', {'text': "Ziadne data"}, content_type="application/xml")
+    return render(request, 'services/message.xml', {'text': "Ziadne data"})
 
 
 def contacts_prompt_zlatestranky(request):
@@ -316,7 +316,7 @@ def contacts_prompt_zlatestranky(request):
     :param request: webová požiadavka
     :return: webová odpoveď
     """
-    return render(request, 'services/contacts_prompt_zlatestranky.xml', {}, content_type="application/xml")
+    return render(request, 'services/contacts_prompt_zlatestranky.xml', {})
 
 
 def contacts_engine_zlatestranky(request):
@@ -353,7 +353,7 @@ def contacts_engine_zlatestranky(request):
             parsedData.append(data)
         except ValueError:
             a = False
-    return render(request, 'services/contacts_list_zlatestranky.xml', {'contacts': parsedData[:20]}, content_type="application/xml")
+    return render(request, 'services/contacts_list_zlatestranky.xml', {'contacts': parsedData[:20]})
 
 
 def contact_zlatestranky(request):
@@ -384,4 +384,4 @@ def contact_zlatestranky(request):
         data['tel'] = strng[:index].strip()
     except ValueError:
         a = False
-    return render(request, 'services/contact_zlatestranky.xml', {'contact': data}, content_type="application/xml")
+    return render(request, 'services/contact_zlatestranky.xml', {'contact': data})

@@ -4,8 +4,8 @@
     <Prompt/>
     <URL>http://{{ request.get_host }}/CiscoServices/weather_engine/</URL>
     <InputItem>
-    <DisplayName>ECV</DisplayName>
-    <QueryStringParam>mesto</QueryStringParam>
-    <InputFlags>U</InputFlags>
+        <DisplayName>ECV</DisplayName>
+        <QueryStringParam>mesto</QueryStringParam>
+        <InputFlags>U</InputFlags>
     </InputItem>
 </CiscoIPPhoneInput>

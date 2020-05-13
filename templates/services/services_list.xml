@@ -3,9 +3,9 @@
     <Title>Django sluzby telefonu Cisco</Title>
     <Prompt>Vyberte sluzbu</Prompt>
     {% for service in services %}
-    <MenuItem>
-        <Name>{{ service.name }}</Name>
-        <URL>http://{{ request.get_host }}/CiscoServices/{{ service.url }}/</URL>
-    </MenuItem>
+        <MenuItem>
+            <Name>{{ service.name }}</Name>
+            <URL>http://{{ request.get_host }}/CiscoServices/{{ service.url }}/</URL>
+        </MenuItem>
     {% endfor %}
 </CiscoIPPhoneMenu>
