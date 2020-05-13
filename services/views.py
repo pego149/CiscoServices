@@ -296,17 +296,6 @@ def contact(request):
             return render(request, 'services/contact_number.xml', {'name': c.get('name'), 'mobile': mobilenumbers, 'tel': telnumbers})
 
 
-def contact_dialer_empty(request):
-    """
-    Pohľad contact_dialer_empty slúži pre prípad, keď zamestnanec nemá zadané
-    telefónne číslo. Vtedy sa zavolá render so šablónou message.xml, ktorú sme si predstavili
-    vyššie, do ktorej pošleme text že toto pole kontaktu neobsahuje dáta.
-    :param request: webová požiadavka
-    :return: webová odpoveď
-    """
-    return render(request, 'services/message.xml', {'text': "Ziadne data"})
-
-
 def contacts_prompt_zlatestranky(request):
     """
     Pohľad contacts_prompt_zlatestranky slúži na získanie vstupu od používateľa.
