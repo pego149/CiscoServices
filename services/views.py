@@ -102,7 +102,8 @@ def UTFToASCII(text):
     :param text: vstupný text
     :return: výstupný text
     """
-    return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode("ascii").replace('"', '').replace("'", '')
+    return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode("ascii").replace('"', '').replace("'",
+                                                                                                                  '')
 
 
 def services_list(request):
@@ -201,12 +202,14 @@ def weather(request):
     :return: webová odpoveď
     """
     try:
-        url = "http://api.openweathermap.org/data/2.5/weather?q=" + mesta.get(request.GET.get('mesto')) + "&appid" \
-            "=" + openWatherApiKey + "&lang=sk&units=metric"
+        url = "http://api.openweathermap.org/data/2.5/weather?q=" + mesta.get(
+            request.GET.get('mesto')) + "&appid=" + openWatherApiKey + "&lang=sk&units=metric"
         res = requests.get(url)
         res.encoding = 'win-1250'
         jsonData = json.loads(res.content.decode())
-        return render(request, 'services/weather_message.xml', {'w': jsonData, 'weather': UTFToASCII(jsonData['weather'][0]['description']), 'city': UTFToASCII(jsonData['name'])}, content_type="application/xml")
+        return render(request, 'services/weather_message.xml',
+                      {'w': jsonData, 'weather': UTFToASCII(jsonData['weather'][0]['description']),
+                       'city': UTFToASCII(jsonData['name'])}, content_type="application/xml")
     except:
         return render(request, 'services/message.xml', {'text': "Mesto nenajdene"})
 
@@ -241,7 +244,8 @@ def contacts_engine(request):
     parsedData = []
     for directory in jsonList:
         cardData = {}
-        cardData['url'] = directory['oc']
+        cardData['url'] = directory['oc'].replace(" ", "%20")
+        cardData['nameurl'] = UTFToASCII(directory['name']).replace(" ", "%20")
         cardData['name'] = UTFToASCII(directory['name'])
         parsedData.append(cardData)
     return render(request, 'services/contacts_list.xml', {'contacts': parsedData[:20]})
@@ -268,19 +272,19 @@ def contact(request):
     for directory in jsonList:
         cardData = {}
         cardData['oc'] = directory['oc']
-        cardData['name'] = UTFToASCII(directory['name']).replace(" ","%20")
+        cardData['name'] = UTFToASCII(directory['name']).replace(" ", "%20")
         if UTFToASCII(directory['function']) == "":
             cardData['function'] = "zamestnanec"
         else:
-            cardData['function'] = UTFToASCII(directory['function']).replace(" ","%20")
-        cardData['tel'] = directory['tel'].replace(" ","%20")
-        cardData['mobil'] = directory['mobil'].replace(" ","%20")
-        cardData['mail'] = directory['mail'].replace(" ","%20")
-        cardData['job'] = UTFToASCII(directory['job']).replace(" ","%20")
-        cardData['room'] = UTFToASCII(directory['room']).replace(" ","%20")
+            cardData['function'] = UTFToASCII(directory['function']).replace(" ", "%20")
+        cardData['tel'] = directory['tel'].replace(" ", "%20")
+        cardData['mobil'] = directory['mobil'].replace(" ", "%20")
+        cardData['mail'] = directory['mail'].replace(" ", "%20")
+        cardData['job'] = UTFToASCII(directory['job']).replace(" ", "%20")
+        cardData['room'] = UTFToASCII(directory['room']).replace(" ", "%20")
         parsedData.append(cardData)
     for c in parsedData:
-        if c.get('oc') == oc and c.get('name') == meno.replace(" ","%20"):
+        if c.get('oc') == oc and c.get('name') == meno.replace(" ", "%20"):
             return render(request, 'services/contact.xml', {'contact': c})
 
 
