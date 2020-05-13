@@ -88,14 +88,32 @@ TAG_RE = re.compile(r'<[^>]+>')
 
 
 def remove_tags(text):
+    """
+    Funkcia, ktorá vymaže html tagy z textu.
+    :param text: vstupný text
+    :return: výstupný text
+    """
     return TAG_RE.sub('', text)
 
 
 def UTFToASCII(text):
+    """
+    Funkcia, ktorá vymaže chybné znaky pre telefón z textu.
+    :param text: vstupný text
+    :return: výstupný text
+    """
     return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode("ascii").replace('"', '').replace("'", '')
 
 
 def services_list(request):
+    """
+    V pohľade services_list sa nám vygeneruje pohľad pre telefón obsahujúci základné
+    menu. V základnom menu sa zobrazia všetky služby, ktoré sú podporované našim systémom.
+    MenuItem je model, v ktorom sú uchovávané všetky služby. Z neho sa jednotlivo vyberajú
+    objekty a zaradom sa generujú podľa XML šablóny.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     items = MenuItem.objects.all()
     services = []
     for service in items:
@@ -104,6 +122,13 @@ def services_list(request):
 
 
 def rss_list(request):
+    """
+    V pohľade rss_list sa generuje pohľad, ktorý obsahuje menu poskytovateľov RSS
+    zdrojov. Každá položka v menu reprezentuje jedného poskytovateľa RSS. RSSItem je
+    model, v ktorom sú uchovávaní všetci poskytovatelia RSS.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     items = RSSItem.objects.all()
     rsses = []
     for rss in items:
@@ -112,6 +137,17 @@ def rss_list(request):
 
 
 def rss_item(request, service):
+    """
+    V pohľade rss_item sa vygeneruje pohľad, ktorý obsahuje menu RSS správ. Každá
+    položka v menu reprezentuje jednu správu RSS. Správy sa načítavajú dynamicky po zavolaní
+    pohľadu, čiže nie sú nikde ukladané. RSS zdroje sú sťahované parsované cez Python modul
+    feedparser (Universal Feed Parser). Všetky znaky, ktoré sú použité v správach musia byť
+    ASCII. UTF-8 znaky sa na telefóne nemusia správne zobrazovať a preto sú prevádzané do
+    znakov ASCII.
+    :param request: webová požiadavka
+    :param service: sluba RSS
+    :return: webová odpoveď
+    """
     items = RSSItem.objects.filter(name__icontains=service)
     srv = items[0]
     itms = []
@@ -123,18 +159,47 @@ def rss_item(request, service):
 
 
 def message(request, msg):
+    """
+    Vytvára zobrazenie textového obsahu na telefóne.
+    :param request: webová požiadavka
+    :param msg: správa ktorá sa má zobraziť
+    :return: webová odpoveď
+    """
     return render(request, 'services/message.xml', {'text': msg}, content_type="application/xml")
 
 
 def message_empty(request):
+    """
+    Vytvára zobrazenie hlášky "Ziadne data".
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     return render(request, 'services/message.xml', {'text': "Ziadne data"}, content_type="application/xml")
 
 
 def weather_prompt(request):
+    """
+    Pohľad weather_prompt slúži na získanie vstupu od používateľa. Vstup tvorí EČV
+    mesta pre ktoré chce používateľ získať aktuálne počasie.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     return render(request, 'services/weather_prompt.xml', {}, content_type="application/xml")
 
 
 def weather(request):
+    """
+    Pohľad weather nám generuje samotný výpis počasia pre zvolené mesto. Ako
+    poskytovateľa sme si zvolili OpenWeatherApi, ktorý nám bezplatne poskytuje informácie o
+    aktuálnom počasí. Vstup získavame GET metódou parametra mesto v ktorom sa nachádza
+    EČV zvoleného mesta. EČV mesta priradíme pomocou slovníka k celému názvu mesta.
+    OpenWeatherApi nám vráti json data s informáciami o počasí ktoré následne dekódujeme
+    do objektu. Objekt následne prevedieme do XML tvaru ktorý bude vytvorený metódou
+    render. Ak mesto nebolo nájdené alebo nastala chyba tak na obrazovku vypíšeme hlášku
+    o chybe.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     try:
         url = "http://api.openweathermap.org/data/2.5/weather?q=" + mesta.get(request.GET.get('mesto')) + "&appid" \
             "=" + openWatherApiKey + "&lang=sk&units=metric"
@@ -147,10 +212,27 @@ def weather(request):
 
 
 def contacts_prompt(request):
+    """
+    Pohľad contact_prompt slúži na získanie vstupu od používateľa. Používateľ zadáva
+    meno a/alebo priezvisko zamestnanca, o ktorom chce získať informácie.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     return render(request, 'services/contacts_prompt.xml', {}, content_type="application/xml")
 
 
 def contacts_engine(request):
+    """
+    Pohľad contacts_engine je časť z hlavnej logiky fungovania vyhľadávania kontaktov
+    v adresári zamestnancov UNIZA, ktorý sa nachádza na adrese
+    http://nic.uniza.sk/webservices/getDirectory.php. Jej úlohou je získať všetky kontakty
+    vyhovujúce zadanému menu a/alebo priezvisku pomocou dátového formátu JSON metódou
+    GET. Následne zo získaných dát vytvoríme pole objektov (kontaktov). Tieto kontakty
+    nakoniec pošleme do funkcie render, ktorá nám vygeneruje za pomoci šablóny výstup pre
+    telefón Cisco vo formáte XML.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     url = "http://nic.uniza.sk/webservices/getDirectory.php?q=" + request.GET.get('meno')
     req = requests.get(url)
     req.encoding = 'win-1250'
@@ -166,6 +248,15 @@ def contacts_engine(request):
 
 
 def contact(request):
+    """
+    V pohľade contact získavame informácie pre konkrétny kontakt podľa mena a oc
+    (osobného čísla zamestnanca) pre prípad, že zamestnancov s rovnakým menom je viac.
+    Metódou GET opäť získame zoznam zamestnancov podľa mena a priezviska zamestnanca.
+    Následne v prípade viacerých rovnakých mien overíme aj oc. Metódou render vygenerujeme
+    menu kontaktu s parametrom objekt kontaktu.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     oc = request.GET.get('oc')
     meno = request.GET.get('name')
     url = "http://nic.uniza.sk/webservices/getDirectory.php?q=" + meno
@@ -194,19 +285,51 @@ def contact(request):
 
 
 def contact_dialer(request, numbers):
+    """
+    Pohľad contact_dialer používame pre vytvorenie poľa s telefónnymi číslami. V
+    prípade, že telefónny kontakt obsahuje viac telefónnych čísel, tak sa tieto čísla rozdelia do
+    viacerých telefónnych polí. Následne metódou render vygenerujeme telefónny zoznam
+    s poľom, ktorý obsahuje čísla daného kontaktu.
+    :param request: webová požiadavka
+    :param numbers: telefónne čísla oddelené čiarkou
+    :return: webová odpoveď
+    """
     out = numbers.split(',')
     return render(request, 'services/contact_number.xml', {'numbers': out}, content_type="application/xml")
 
 
 def contact_dialer_empty(request):
+    """
+    Pohľad contact_dialer_empty slúži pre prípad, keď zamestnanec nemá zadané
+    telefónne číslo. Vtedy sa zavolá render so šablónou message.xml, ktorú sme si predstavili
+    vyššie, do ktorej pošleme text že toto pole kontaktu neobsahuje dáta.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     return render(request, 'services/message.xml', {'text': "Ziadne data"}, content_type="application/xml")
 
 
 def contacts_prompt_zlatestranky(request):
+    """
+    Pohľad contacts_prompt_zlatestranky slúži na získanie vstupu od používateľa.
+    Používateľ zadáva meno a/alebo priezvisko človeka, o ktorom chce získať informácie.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     return render(request, 'services/contacts_prompt_zlatestranky.xml', {}, content_type="application/xml")
 
 
 def contacts_engine_zlatestranky(request):
+    """
+    Pohľad contacts_engine_zlatestranky ukrýva logiku vyhľadávania kontaktov na
+    portáli zlatestránky.sk. Jej úlohou je pomocou metódy GET získať všetky kontakty
+    vyhovujúce zadanému menu a/alebo priezvisku vo formáte HTML stránky. Následne zo
+    získanej stránky vytvoríme pole objektov (kontaktov). Tieto kontakty nakoniec pošleme do
+    funkcie render, ktorá nám vygeneruje za pomoci šablóny výstup pre telefón Cisco vo formáte
+    XML.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     url = "https://www.zlatestranky.sk/osoby/hladanie/" + request.GET.get('meno') + "/"
     header = {'Accept-Encoding': 'gzip, deflate, sdch',
               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -234,6 +357,14 @@ def contacts_engine_zlatestranky(request):
 
 
 def contact_zlatestranky(request):
+    """
+    V pohľade contact_zlatestranky získavame informácie pre konkrétny kontakt podľa
+    oc (osobného čísla). Metódou GET opäť získame HTML podstránku kontaktu podľa oc.
+    Metódou render vygenerujeme menu kontaktu s parametrom objekt kontaktu, v ktorom sa
+    nachádza meno kontaktu a telefónne číslo.
+    :param request: webová požiadavka
+    :return: webová odpoveď
+    """
     url = "https://www.zlatestranky.sk" + request.GET.get('oc')
     header = {'Accept-Encoding': 'gzip, deflate, sdch',
               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
