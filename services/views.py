@@ -153,8 +153,8 @@ def rss_item(request, service):
     itms = []
     feed = feedparser.parse(srv.url)
     for entry in feed.entries:
-        itms.append({'title': UTFToASCII(remove_tags(html.unescape(entry.title)).strip()[:63]),
-                     'description': UTFToASCII(remove_tags(html.unescape(entry.summary)).strip().replace(" ", "%20"))[:230]})
+        itms.append({'title': UTFToASCII(remove_tags(html.unescape(entry.title)).strip()[:62]),
+                     'description': UTFToASCII(remove_tags(html.unescape(entry.summary)).strip().replace(" ", "%20"))[:254 - len(request.get_host()) - 30]})
     return render(request, 'services/rss_service.xml', {'rss': srv, 'entries': itms[:20]})
 
 
@@ -383,5 +383,5 @@ def contact_zlatestranky(request):
         index = strng.index('</span>')
         data['tel'] = strng[:index].strip()
     except ValueError:
-        a = False
+        pass
     return render(request, 'services/contact_zlatestranky.xml', {'contact': data})

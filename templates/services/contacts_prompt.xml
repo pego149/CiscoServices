@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <CiscoIPPhoneInput>
-    <Title>Zadajte Meno a Priezvisko kontaktu:</Title>
+    <Title>Zadajte Meno a Priezvisko:</Title>
     <Prompt/>
     <URL>http://{{ request.get_host }}/CiscoServices/contacts_engine/</URL>
     <InputItem>
