@@ -2,9 +2,15 @@
 <CiscoIPPhoneDirectory>
     <Title>Kontakty UNIZA</Title>
     <Prompt>Zvolte cislo</Prompt>
-    {% for number in numbers %}
+    {% for number in tel %}
         <DirectoryEntry>
-            <Name></Name>
+            <Name>{{ name }} - telefon</Name>
+            <Telephone>{{ number }}</Telephone>
+        </DirectoryEntry>
+    {% endfor %}
+    {% for number in mobile %}
+        <DirectoryEntry>
+            <Name>{{ name }} - mobil</Name>
             <Telephone>{{ number }}</Telephone>
         </DirectoryEntry>
     {% endfor %}

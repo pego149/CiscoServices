@@ -272,34 +272,28 @@ def contact(request):
     for directory in jsonList:
         cardData = {}
         cardData['oc'] = directory['oc']
-        cardData['name'] = UTFToASCII(directory['name']).replace(" ", "%20")
+        cardData['name'] = UTFToASCII(directory['name'])
         if UTFToASCII(directory['function']) == "":
             cardData['function'] = "zamestnanec"
         else:
             cardData['function'] = UTFToASCII(directory['function']).replace(" ", "%20")
-        cardData['tel'] = directory['tel'].replace(" ", "%20")
-        cardData['mobil'] = directory['mobil'].replace(" ", "%20")
-        cardData['mail'] = directory['mail'].replace(" ", "%20")
-        cardData['job'] = UTFToASCII(directory['job']).replace(" ", "%20")
-        cardData['room'] = UTFToASCII(directory['room']).replace(" ", "%20")
+        cardData['tel'] = directory['tel']
+        cardData['mobil'] = directory['mobil']
+        cardData['mail'] = directory['mail']
+        cardData['job'] = UTFToASCII(directory['job'])
+        cardData['room'] = UTFToASCII(directory['room'])
         parsedData.append(cardData)
     for c in parsedData:
-        if c.get('oc') == oc and c.get('name') == meno.replace(" ", "%20"):
-            return render(request, 'services/contact.xml', {'contact': c})
-
-
-def contact_dialer(request, numbers):
-    """
-    Pohľad contact_dialer používame pre vytvorenie poľa s telefónnymi číslami. V
-    prípade, že telefónny kontakt obsahuje viac telefónnych čísel, tak sa tieto čísla rozdelia do
-    viacerých telefónnych polí. Následne metódou render vygenerujeme telefónny zoznam
-    s poľom, ktorý obsahuje čísla daného kontaktu.
-    :param request: webová požiadavka
-    :param numbers: telefónne čísla oddelené čiarkou
-    :return: webová odpoveď
-    """
-    out = numbers.split(',')
-    return render(request, 'services/contact_number.xml', {'numbers': out})
+        if c.get('oc') == oc and c.get('name') == meno:
+            if c.get('mobil') != "":
+                mobilenumbers = c.get('mobil').split(',')
+            else:
+                mobilenumbers = []
+            if c.get('tel') != "":
+                telnumbers = c.get('tel').split(',')
+            else:
+                telnumbers = []
+            return render(request, 'services/contact_number.xml', {'name': c.get('name'), 'mobile': mobilenumbers, 'tel': telnumbers})
 
 
 def contact_dialer_empty(request):
