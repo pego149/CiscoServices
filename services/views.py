@@ -228,10 +228,9 @@ def contacts_prompt(request):
 def contacts_engine(request):
     """
     Pohľad contacts_engine je časť z hlavnej logiky fungovania vyhľadávania kontaktov
-    v adresári zamestnancov UNIZA, ktorý sa nachádza na adrese
-    http://nic.uniza.sk/webservices/getDirectory.php. Jej úlohou je získať všetky kontakty
-    vyhovujúce zadanému menu a/alebo priezvisku pomocou dátového formátu JSON metódou
-    GET. Následne zo získaných dát vytvoríme pole objektov (kontaktov). Tieto kontakty
+    v adresári zamestnancov UNIZA, ktorý sa nachádza na lokálnej databáze. Jej úlohou je získať
+    všetky kontakty vyhovujúce zadanému menu a/alebo priezvisku alebo telefónneho/mobilného číslu.
+    Následne zo získaných dát vytvoríme pole objektov (kontaktov). Tieto kontakty
     nakoniec pošleme do funkcie render, ktorá nám vygeneruje za pomoci šablóny výstup pre
     telefón Cisco vo formáte XML.
     :param request: webová požiadavka
@@ -251,11 +250,9 @@ def contacts_engine(request):
 
 def contact(request):
     """
-    V pohľade contact získavame informácie pre konkrétny kontakt podľa mena a oc
-    (osobného čísla zamestnanca) pre prípad, že zamestnancov s rovnakým menom je viac.
-    Metódou GET opäť získame zoznam zamestnancov podľa mena a priezviska zamestnanca.
-    Následne v prípade viacerých rovnakých mien overíme aj oc. Metódou render vygenerujeme
-    menu kontaktu s parametrom objekt kontaktu.
+    V pohľade contact získavame informácie pre konkrétny kontakt podľa id kontaktu v databáze.
+    Metódou GET opäť získame zoznam zamestnancov podľa mena a priezviska zamestnanca. Metódou render
+    vygenerujeme menu kontaktu s parametrom objekt kontaktu.
     :param request: webová požiadavka
     :return: webová odpoveď
     """
