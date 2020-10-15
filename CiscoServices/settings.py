@@ -125,5 +125,5 @@ CSRF_COOKIE_SECURE = False
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
 CRONJOBS = [
-    ('0 1 * * *', 'services.task.update_contacts')
+    ('0 1 * * 1', 'services.task.update_contacts')
 ]
