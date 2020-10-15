@@ -6,7 +6,7 @@ import feedparser
 import requests
 import unicodedata
 from django.shortcuts import render
-from .models import MenuItem, RSSItem
+from .models import MenuItem, RSSItem, Contact
 
 openWatherApiKey = "373a1e70fd8a428e309f164c0274b176"
 
@@ -155,7 +155,8 @@ def rss_item(request, service):
     feed = feedparser.parse(srv.url)
     for entry in feed.entries:
         itms.append({'title': UTFToASCII(remove_tags(html.unescape(entry.title)).strip()[:62]),
-                     'description': UTFToASCII(remove_tags(html.unescape(entry.summary)).strip().replace(" ", "%20"))[:254 - len(request.get_host()) - 30]})
+                     'description': UTFToASCII(remove_tags(html.unescape(entry.summary)).strip().replace(" ", "%20"))[
+                                    :254 - len(request.get_host()) - 30]})
     return render(request, 'services/rss_service.xml', {'rss': srv, 'entries': itms[:20]})
 
 
@@ -236,17 +237,14 @@ def contacts_engine(request):
     :param request: webová požiadavka
     :return: webová odpoveď
     """
-    url = "http://nic.uniza.sk/webservices/getDirectory.php?q=" + request.GET.get('meno')
-    req = requests.get(url)
-    req.encoding = 'win-1250'
-    jsonData = json.loads(req.content.decode())
-    jsonList = jsonData['directory']
+    results = Contact.objects.filter(name__icontains=request.GET.get('input')) | \
+              Contact.objects.filter(mobil__icontains=request.GET.get('input')) | \
+              Contact.objects.filter(tel__contains=request.GET.get('input'))
     parsedData = []
-    for directory in jsonList:
+    for directory in list(results):
         cardData = {}
-        cardData['url'] = directory['oc'].replace(" ", "%20")
-        cardData['nameurl'] = UTFToASCII(directory['name']).replace(" ", "%20")
-        cardData['name'] = UTFToASCII(directory['name'])
+        cardData['url'] = directory.id
+        cardData['name'] = directory.name
         parsedData.append(cardData)
     return render(request, 'services/contacts_list.xml', {'contacts': parsedData[:20]})
 
@@ -261,39 +259,18 @@ def contact(request):
     :param request: webová požiadavka
     :return: webová odpoveď
     """
-    oc = request.GET.get('oc')
-    meno = request.GET.get('name')
-    url = "http://nic.uniza.sk/webservices/getDirectory.php?q=" + meno
-    req = requests.get(url)
-    req.encoding = 'win-1250'
-    jsonData = json.loads(req.content.decode())
-    jsonList = jsonData['directory']
-    parsedData = []
-    for directory in jsonList:
-        cardData = {}
-        cardData['oc'] = directory['oc']
-        cardData['name'] = UTFToASCII(directory['name'])
-        if UTFToASCII(directory['function']) == "":
-            cardData['function'] = "zamestnanec"
-        else:
-            cardData['function'] = UTFToASCII(directory['function']).replace(" ", "%20")
-        cardData['tel'] = directory['tel']
-        cardData['mobil'] = directory['mobil']
-        cardData['mail'] = directory['mail']
-        cardData['job'] = UTFToASCII(directory['job'])
-        cardData['room'] = UTFToASCII(directory['room'])
-        parsedData.append(cardData)
-    for c in parsedData:
-        if c.get('oc') == oc and c.get('name') == meno:
-            if c.get('mobil') != "":
-                mobilenumbers = c.get('mobil').split(',')
-            else:
-                mobilenumbers = []
-            if c.get('tel') != "":
-                telnumbers = c.get('tel').split(',')
-            else:
-                telnumbers = []
-            return render(request, 'services/contact_number.xml', {'name': c.get('name'), 'mobile': mobilenumbers, 'tel': telnumbers})
+    oc = request.GET.get('id')
+    result = Contact.objects.filter(id=request.GET.get('id')).first()
+    if result.mobil != "":
+        mobilenumbers = result.mobil.split(',')
+    else:
+        mobilenumbers = []
+    if result.tel != "":
+        telnumbers = result.tel.split(',')
+    else:
+        telnumbers = []
+    return render(request, 'services/contact_number.xml',
+                  {'name': result.name, 'mobile': mobilenumbers, 'tel': telnumbers})
 
 
 def contacts_prompt_zlatestranky(request):

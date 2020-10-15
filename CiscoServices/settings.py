@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'p-4t#uz(tf#3*8kht(%exn82xqg#mpnn&i9a1%)ur&r=dg(^bc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'services',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,8 @@ TEMPLATE_LOADERS = (
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'CiscoServices/static')
 CSRF_COOKIE_SECURE = False
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+
+CRONJOBS = [
+    ('0 1 * * *', 'services.task.update_contacts')
+]

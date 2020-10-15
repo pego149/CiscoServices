@@ -33,3 +33,27 @@ class RSSItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Contact(models.Model):
+    """
+    Model
+    :param models.Model: podtrieda django.db.models.Model
+    """
+    oc = models.IntegerField()
+    function = models.CharField(max_length=200, null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    tel = models.CharField(max_length=200, null=True, blank=True)
+    mobil = models.CharField(max_length=200, null=True, blank=True)
+    mail = models.CharField(max_length=200, null=True, blank=True)
+    job = models.CharField(max_length=200, null=True, blank=True)
+    room = models.CharField(max_length=200, null=True, blank=True)
+
+    def publish(self):
+        self.save()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']

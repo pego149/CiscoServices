@@ -1,0 +1,15 @@
+{% extends 'admin/change_list.html' %}
+
+{% block object-tools %}
+    <ul class="object-tools" style="
+        font-size: 10px;
+        padding-right: 140px;
+        top: 17px;
+    ">
+        <li>
+            <a href="update/" class="addlink">Aktualizovať kontakty</a>
+        </li>
+    </ul>
+    <br />
+    {{ block.super }}
+{% endblock %}
